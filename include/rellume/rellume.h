@@ -84,6 +84,14 @@ RELLUME_API int ll_func_decode_block(LLFunc* func, uintptr_t addr,
 RELLUME_API int ll_func_decode_cfg(LLFunc* func, uintptr_t addr,
                                    RellumeMemAccessCb cb, void* user_arg);
 
+#ifdef CC_PROFILE_DUMPIN
+RELLUME_API void ll_func_print_instr(LLFunc* func, uintptr_t addr);
+#endif
+
+#ifdef CC_PROFILE_COUNT
+RELLUME_API size_t ll_func_get_instr_num(LLFunc* func);
+#endif
+
 struct RellumeCodeRange {
     uint64_t start, end;
 };

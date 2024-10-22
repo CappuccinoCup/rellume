@@ -171,6 +171,18 @@ int ll_func_decode_cfg(LLFunc* func, uintptr_t addr, RellumeMemAccessCb mem_acc,
                           mem_acc, user_arg);
 }
 
+#ifdef CC_PROFILE_DUMPIN
+void ll_func_print_instr(LLFunc* func, uintptr_t addr) {
+    unwrap(func)->PrintInstr(addr);
+}
+#endif
+
+#ifdef CC_PROFILE_COUNT
+size_t ll_func_get_instr_num(LLFunc* func) {
+    return unwrap(func)->GetInstrNum();
+}
+#endif
+
 const struct RellumeCodeRange* ll_func_ranges(LLFunc* func) {
     return reinterpret_cast<const RellumeCodeRange*>(unwrap(func)->CodeRanges());
 }

@@ -39,6 +39,11 @@
 #include <cstdint>
 #include <optional>
 
+#ifdef CC_PROFILE_DUMPIN
+#include <iostream>
+#include <iomanip>
+#endif
+
 #include "arch.h"
 
 namespace rellume {
@@ -58,6 +63,10 @@ class Instr {
         farmdec::Inst _a64;
 #endif // RELLUME_WITH_AARCH64
     };
+
+#if defined(RELLUME_WITH_AARCH64) && defined(CC_PROFILE_DUMPIN)
+    uint32_t binst_a64;
+#endif
 
 public:
 
@@ -167,6 +176,9 @@ public:
             }
 
             uint32_t binst = buf[0] | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
+#ifdef CC_PROFILE_DUMPIN
+            this->binst_a64 = binst;
+#endif
             fad_decode(&binst, 1, &_a64);
             if (_a64.op == farmdec::A64_ERROR || _a64.op == farmdec::A64_UNKNOWN) {
                 return -1;
@@ -183,6 +195,26 @@ public:
             instlen = res;
         return res;
     }
+
+#ifdef CC_PROFILE_DUMPIN
+    void Print() {
+        switch (this->arch) {
+#ifdef RELLUME_WITH_AARCH64
+        case Arch::AArch64: {
+            std::cerr << "0x" << std::hex << this->addr << ": "
+                    << std::setfill('0') << std::setw(8) << std::hex << this->binst_a64
+                    << "      ";
+            fad_print(&(this->_a64));
+            break;
+        }
+#endif // RELLUME_WITH_AARCH64
+        default:
+            std::cerr << "Arch not supported..." << std::endl;
+            break;
+        }
+    }
+#endif
+
 };
 
 } // namespace

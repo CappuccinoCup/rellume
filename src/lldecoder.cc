@@ -231,4 +231,18 @@ int Function::Decode(uintptr_t addr, DecodeStop stop, MemReader memacc) {
     return 0;
 }
 
+#ifdef CC_PROFILE_DUMPIN
+void Function::PrintInstr(uintptr_t addr) {
+    for (auto& instr : instrs) {
+        instr.inst.Print();
+    }
+}
+#endif
+
+#ifdef CC_PROFILE_COUNT
+size_t Function::GetInstrNum() {
+    return instrs.size();
+}
+#endif
+
 } // namespace rellume

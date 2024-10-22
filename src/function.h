@@ -61,6 +61,14 @@ public:
     using MemReader = std::function<size_t(uintptr_t, uint8_t*, size_t)>;
     int Decode(uintptr_t addr, DecodeStop stop, MemReader memacc = nullptr);
 
+#ifdef CC_PROFILE_DUMPIN
+    void PrintInstr(uintptr_t addr);
+#endif
+
+#ifdef CC_PROFILE_COUNT
+    size_t GetInstrNum();
+#endif
+
     struct CodeRange {
         uint64_t start, end;
     };
